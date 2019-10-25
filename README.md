@@ -1,1 +1,3 @@
 # project-0-KamilahCar
+This Project uses a Harry Potter theme to demonstrate how to perform transactions using information from an SQL Database in conjunction with the Eclipse IDE. There are many transactions performed some that a user can see and some that only an administrator can see. Each user must register and have their credentials authenticated in order to add house points or subtract house points. Only the user that is logged in and an administrator may see how many house points have been added or subtracted. A user can also see their transaction history. 
+A user can add a user account or drop a user account. Additionally, an administrator can drop an account and "expell" the user.

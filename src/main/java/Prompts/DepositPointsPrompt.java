@@ -1,7 +1,7 @@
 package Prompts;
 
-public class DepositMoneyPrompt implements Prompt{
-	public DepositMoneyPrompt() {
+public class DepositPointsPrompt implements Prompt{
+	public DepositPointsPrompt() {
 		System.out.println("How much money would you like to deposit?");
 	}
 

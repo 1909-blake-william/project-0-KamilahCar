@@ -1,15 +1,14 @@
-package com.revature.util;
+package Util;
+import Daos.UserDao;
+import Models.User;
 
-/*import BankingApp.daos;
-import BankingApp.models;
+public class UserRegistryUtil {
+	public static final UserRegistryUtil instance = new UserRegistryUtil();
 
-public class AuthUtil {
-	public static final AuthUtil instance = new AuthUtil();
-
-	private UserDao userDao = UserDao.currentImplementation;
+	private UserDao userDao = UserDao.currentUserImplementation;
 	private User currentUser = null;
 
-	private AuthUtil() {
+	private UserRegistryUtil() {
 		super();
 	}
 
@@ -23,4 +22,4 @@ public class AuthUtil {
 		return currentUser;
 	}
 
-}*/
+}

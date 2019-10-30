@@ -2,9 +2,25 @@ package Models;
 
 public class User {
 	private int id;
-	private String name, password;
+	private String name, password, role;
 	public int getId() {
 		return id;
+	}
+	public User(int id, String name, String password, String role) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.password = password;
+		this.role = role;
+	}
+	public User(String name, String password) {
+		super();
+		this.name = name;
+		this.password = password;
+		// TODO Auto-generated constructor stub
+	}
+	public User() {
+		super();
 	}
 	public void setId(int id) {
 		this.id = id;
@@ -21,15 +37,11 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public User(int id, String name, String password) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.password = password;
+	public String getRole() {
+		return role;
 	}
-	public User() {
-		super();
-		// TODO Auto-generated constructor stub
+	public void setRole(String role) {
+		this.role = role;
 	}
 	@Override
 	public String toString() {

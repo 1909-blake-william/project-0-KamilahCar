@@ -2,44 +2,51 @@ package Prompts;
 
 import java.util.Scanner;
 
-import org.apache.log4j.Logger;
-
-import Daos.UserDao;
-import Daos.WizardDao;
+/*import org.apache.log4j.Logger;
 import Models.User;
+import Daos.UserDao;*/
+import Daos.WizardDao;
+
+import Models.WizardStudent;
+import Util.UserRegistryUtil;
 
 public class RemoveAccountPrompt implements Prompt{
 	//Instance Variables
-	Scanner accountNameInput = new Scanner(System.in);
-	Scanner removeAnotherAccountInput = new Scanner(System.in);
-	UserDao userDao = UserDao.currentUserImplementation;
-	WizardDao wizardDao = WizardDao.currentAccountImplementation;
-	Logger log = Logger.getRootLogger();
+	private UserRegistryUtil registerUser = UserRegistryUtil.instance;
+	private Scanner accountNameInput = new Scanner(System.in);
+	//private Scanner removeAnotherAccountInput = new Scanner(System.in);
+	//private UserDao userDao = UserDao.currentUserImplementation;
+	private WizardDao wizardDao = WizardDao.currentAccountImplementation;
+	//Logger log = Logger.getRootLogger();
 	@Override
 	public Prompt run() {
 		// TODO Auto-generated method stub
+		//Getting Account info
 		System.out.println("Enter the name of the account you want to remove.");
 		String accountName = accountNameInput.nextLine();
-		log.debug("Removing User");
-		User removeUser = userDao.findByUsername(accountName);
-		if (removeUser != null) {
-			userDao.remove(removeUser);
-			log.debug("User should be removed.");
-		//accountNameInput.close();
+		//log.debug("Removing User if the user is an admin"); 
+		WizardStudent wizardToBeRemoved = wizardDao.findByName(accountName);
+		String userRole = registerUser.getCurrentUser().getRole();
+		//log.debug("User should be removed if the user is an admin.");
+		//Checking if account exists in database
+		if (userRole.equalsIgnoreCase("admin")) {
+				wizardDao.remove(wizardToBeRemoved);
+			//Accessing list of transactions created in AddAccountPrompt class
+				//Adding this transaction to that list
+				AddAccountPrompt.addTransaction.add("Account removed " + accountName);
+				//Return to Admin Main Menu
+				return new AdminMainPrompt();
+		} else if (wizardToBeRemoved != null && !userRole.equalsIgnoreCase("admin")){
+				wizardDao.disableCharacter(wizardToBeRemoved);
+				//Return to main menu
+				return new MainMenuPrompt();
+				//accountNameInput.close();
+		//Username already exists in database and cannot be duplicated
 		} else {
-			System.out.println("You do not have any accounts to remove");
+			System.out.println("Invalid username and password.");
+			return this;
 		}
-		System.out.println("Would you like to remove another account Y/N");
-		String answer = removeAnotherAccountInput.nextLine();
-		switch(answer) {
-		case "Y":
-			break;
-		case "N":
-			return new MainMenuPrompt();
-		default:
-			System.out.println("Invalid input. Please choose Y or N");
-		}
-		return this;
+		
 	}
 	
 }

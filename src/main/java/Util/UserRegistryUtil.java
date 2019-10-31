@@ -1,6 +1,9 @@
 package Util;
+import java.util.List;
+
 import Daos.UserDao;
 import Models.User;
+import Prompts.AddAccountPrompt;
 
 public class UserRegistryUtil {
 	public static final UserRegistryUtil instance = new UserRegistryUtil();
@@ -20,6 +23,10 @@ public class UserRegistryUtil {
 
 	public User getCurrentUser() {
 		return currentUser;
+	}
+	
+	public List<String> getTransactions(){
+		return AddAccountPrompt.addTransaction;
 	}
 
 }

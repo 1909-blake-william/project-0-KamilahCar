@@ -30,7 +30,7 @@ public class UserDaoDatabase implements UserDao {
 			//log.debug("attempting to find user by credentials from DB");
 			try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
 
-				String saveStatement = "INSERT INTO hogwarts_users (user_id, user_name, user_password)"
+				String saveStatement = "INSERT INTO hogwarts_users (user_id, user_name, user_password) "
 						+ " VALUES (hogwarts_users_id_seq.nextval,?,?)";
 
 				PreparedStatement ps = hogwartsDatabase.prepareStatement(saveStatement);
@@ -47,7 +47,7 @@ public class UserDaoDatabase implements UserDao {
 			}
 		}
 		public int remove (User thisUser) {
-			/*try(Connection hogwartsDatabase = ConnectionUtil.getConnection()){
+			try(Connection hogwartsDatabase = ConnectionUtil.getConnection()){
 				String deleteStatement = "DELETE FROM hogwarts_users WHERE user_name = ?";
 				PreparedStatement ps = hogwartsDatabase.prepareStatement(deleteStatement);
 				ps.setString(1, thisUser.getName());	
@@ -58,12 +58,21 @@ public class UserDaoDatabase implements UserDao {
 				System.out.println(e.getSQLState());
 				//e.printStackTrace();
 				return 0;
-			}*/
+			}
+		}
+		public int disableLogin(User deleteLogin) {
 			try(Connection hogwartsDatabase = ConnectionUtil.getConnection()){
-				String deleteStatement = "DELETE FROM hogwarts_users WHERE user_name = ?" +
-										"DELETE FROM hogwarts_characters WHERE user_name = ?";
+				String addStatement = "INSERT INTO HOGWARTS_DISABLEDUSERS(?,?,?) " + 
+						"VALUES(hogwarts_user_id_seq,?,?)";
+				String deleteStatement = "DELETE FROM hogwarts_users WHERE user_name = ?";
+				PreparedStatement psAdd = hogwartsDatabase.prepareStatement(addStatement);
+				psAdd.setString(1, deleteLogin.getName());	
+				psAdd.setString(2, deleteLogin.getPassword());
+				
+				psAdd.executeUpdate();
+			
 				PreparedStatement ps = hogwartsDatabase.prepareStatement(deleteStatement);
-				ps.setString(1, thisUser.getName());	
+				ps.setString(1, deleteLogin.getName());	
 				
 				return ps.executeUpdate();
 			} catch(SQLException e) {
@@ -152,13 +161,12 @@ public class UserDaoDatabase implements UserDao {
 				return null;
 			}
 		}
-
 		@Override
 		public User findByUsername(String username) {
 			// TODO Auto-generated method stub
 			
 			try (Connection hogwartsDatabase = ConnectionUtil.getConnection()){
-				String selection = "SELECT * FROM hogwarts_users" + "WHERE user_name = ?";
+				String selection = "SELECT * FROM hogwarts_users " + "WHERE user_name = ?";
 				PreparedStatement ps = hogwartsDatabase.prepareStatement(selection);
 				ps.setString(1, username);
 				
@@ -172,8 +180,16 @@ public class UserDaoDatabase implements UserDao {
 				// TODO Auto-generated catch block
 				System.out.println(e.getCause());
 				System.out.println(e.getSQLState());
-				//e.printStackTrace();
+				e.printStackTrace();
+				return null;
 			}
-			return null;
+			
 		}
+
+		/*@Override
+		public int partiallyRemove(User u) {
+			// TODO Auto-generated method stub
+			
+			return 0;
+		}*/
 }

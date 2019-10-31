@@ -2,6 +2,7 @@ package Daos;
 
 //import java.sql.CallableStatement;
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,20 +14,19 @@ import java.util.List;
 //import Models.User;
 import Models.WizardStudent;
 import Util.ConnectionUtil;
+//import Util.UserRegistryUtil;
 
 public class WizardDaoDatabase implements WizardDao {
 	//private Logger log = Logger.getRootLogger();
+	//private UserRegistryUtil registerUser = UserRegistryUtil.instance;
 		WizardStudent extractWizard(ResultSet rs) throws SQLException {
 			int id = rs.getInt("wizard_id");
 			String name = rs.getString("wizard_name");
 			int year = rs.getInt("wizard_year");
 			int housePoints = rs.getInt("house_points");
 			String house = rs.getString("house_name");
-			//int userId = rs.getInt("user_id");
-			//String userPassword = rs.getString("user_password");
-			//String userName = rs.getString("user_name");
-			//String userRole = rs.getString("systemRole");
-			return new WizardStudent(id, name, year, housePoints, house/*, userName*/);
+		
+			return new WizardStudent(id, name, year, housePoints, house);
 		}
  public List<WizardStudent> findAll() {
 	 WizardStudent wizardFindAll = null;
@@ -51,37 +51,40 @@ public class WizardDaoDatabase implements WizardDao {
 @Override
 public WizardStudent findByName(String name) {
 	// TODO Auto-generated method stub
-	ResultSet rs = null;
 	
-	WizardStudent wizardfindByName = null;
+	
 	try (Connection hogwartsDatabase = ConnectionUtil.getConnection()){
-		String selection = "SELECT * FROM HOGWARTS_CHARACTERS hc" + "";
+		String selection = "SELECT * FROM HOGWARTS_CHARACTERS";
 		PreparedStatement ps = hogwartsDatabase.prepareStatement(selection);
-		rs = ps.executeQuery();
-		while(rs.next()) {
-			wizardfindByName = extractWizard(rs);
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			return extractWizard(rs);
+		} else {
+			return null;
 		}
 	} catch(SQLException e) {
 		e.getCause();
 		e.getSQLState();
 		e.printStackTrace();
+		return null;
 	}
-	return wizardfindByName;
 }
 public boolean doSave(WizardStudent wizard) {
-	boolean saveWizard = false;
 	int year = wizard.getWizardYear();
 	String name = wizard.getName();
 	String houseName = wizard.getHouseName();
 	if (findByName(name) == null) {
-		if (houseName.equals("Gryffindor")|| houseName.equals("Slytherin")||
-				houseName.equals("Hufflepuff")|| houseName.equals("Ravenclaw")) {
-			if (year == 1 || year == 2 || year == 3 || year == 4) {
-				saveWizard = true;
-			}
-		}
+		return false;
+	} else if (!houseName.equals("Gryffindor")|| !houseName.equals("Slytherin")||
+				!houseName.equals("Hufflepuff")|| !houseName.equals("Ravenclaw")) {
+		return false;
+		
+	} else if (year == 1 || year == 2 || year == 3 || year == 4) {
+				return false;
+	} else {
+		return true;
 	}
-	return saveWizard;
+	
 }
 @Override
 public int save(WizardStudent wizard) {
@@ -107,10 +110,39 @@ public int save(WizardStudent wizard) {
 		return 0;
 	}
 }
+//Cascading delete based on foreign key
+//Move character over to a new table (inactive table) based on booleans
 public int remove(WizardStudent removeWizard) {
 	try(Connection hogwartsDatabase = ConnectionUtil.getConnection()){
 		//"DELETE FROM hogwarts_users WHERE user_name = ?" +
 		String deleteStatement = "DELETE FROM hogwarts_characters WHERE wizard_name = ?";
+		PreparedStatement ps = hogwartsDatabase.prepareStatement(deleteStatement);
+		ps.setString(1, removeWizard.getName());	
+		
+		return ps.executeUpdate();
+	} catch(SQLException e) {
+		System.out.println(e.getCause());
+		System.out.println(e.getSQLState());
+		//e.printStackTrace();
+		return 0;
+	}
+}
+@Override
+public int disableCharacter(WizardStudent removeWizard) {
+	// TODO Auto-generated method stub
+	try(Connection hogwartsDatabase = ConnectionUtil.getConnection()){
+		//"DELETE FROM hogwarts_users WHERE user_name = ?" +
+		String addStatement = "INSERT INTO HOGWARTS_DISABLED_CHARACTERS(?,?,?,?,?) " + 
+								"VALUES(hogwarts_wizard_id_seq,?,?,?,?)";
+		String deleteStatement = "DELETE FROM hogwarts_characters WHERE wizard_name = ?";
+								
+		PreparedStatement psAdd = hogwartsDatabase.prepareStatement(addStatement);
+		psAdd.setString(1, removeWizard.getName());
+		psAdd.setInt(2, removeWizard.getWizardYear());
+		psAdd.setInt(3, removeWizard.getHousePoints());
+		psAdd.setString(4, removeWizard.getHouseName());
+		psAdd.executeUpdate();
+		
 		PreparedStatement ps = hogwartsDatabase.prepareStatement(deleteStatement);
 		ps.setString(1, removeWizard.getName());	
 		

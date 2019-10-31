@@ -20,5 +20,9 @@ public interface UserDao {
 
 	User findByUsername(String username);
 
+	int disableLogin(User loginDelete);
+
+	//int partiallyRemove(User u);
+
 
 }

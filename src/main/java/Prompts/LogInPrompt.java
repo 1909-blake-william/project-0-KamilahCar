@@ -1,7 +1,7 @@
 package Prompts;
 
 import java.util.Scanner;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 import Daos.UserDao;
 import Models.User;
@@ -11,7 +11,7 @@ public class LogInPrompt implements Prompt{
 	private Scanner input = new Scanner(System.in);
 	private UserRegistryUtil registerUser = UserRegistryUtil.instance;
 	private UserDao userDao = UserDao.currentUserImplementation;
-	Logger log = Logger.getRootLogger();
+	//Logger log = Logger.getRootLogger();
 
 	@Override
 	public Prompt run() {
@@ -32,33 +32,31 @@ public class LogInPrompt implements Prompt{
 			User currentUser = userDao.findByUsername(firstTimeUsername);
 			
 			if (currentUser != null) {
-				log.debug("attempting to store username");
+				//log.debug("attempting to store username");
 				System.out.println("This user already exists. Please choose a different name");
-				return this;
+				break;
 			} else {
 				System.out.println("Please create your password.");
 				String firstTimePassword = input.nextLine();
 				
-				log.debug("attempting to store username and password");
+				//log.debug("attempting to store username and password");
 				User newUser = new User(1, firstTimeUsername, firstTimePassword, "student");
 				userDao.save(newUser);
-				return new CreateCharacterPrompt();
+				registerUser.login(firstTimeUsername, firstTimePassword);
 			}
 		case "2":
 				System.out.println("Please enter your username");
 				String username = input.nextLine();
+				System.out.println("Please enter your password");
 				String password = input.nextLine();
-				
-				log.debug("attempting to login");
 				User anotherUser = registerUser.login(username, password);
 				if (anotherUser == null) {
-					System.out.println("Invalid Credentials.");
-					break;
+					System.out.println("Invalid Credentials. Check your username or password.");
+					return this;
 				} else if (anotherUser.getRole().equalsIgnoreCase("admin")){
-					System.out.println("Welcome Admin");
-					return new AdminMainPrompt();
+						System.out.println("Welcome Admin");
+						return new AdminMainPrompt();
 				} else {
-					log.info("successfully logged in");
 					return new MainMenuPrompt();
 				}
 		default:

@@ -3,9 +3,7 @@ package Models;
 public class User {
 	private int id;
 	private String name, password, role;
-	public int getId() {
-		return id;
-	}
+	
 	public User(int id, String name, String password, String role) {
 		super();
 		this.id = id;
@@ -21,6 +19,9 @@ public class User {
 	}
 	public User() {
 		super();
+	}
+	public int getId() {
+		return id;
 	}
 	public void setId(int id) {
 		this.id = id;

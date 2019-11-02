@@ -1,9 +1,13 @@
 package Models;
 
+import Util.UserRegistryUtil;
+
 public class WizardStudent {
 	//instance variables
 	private int id, wizardYear, housePoints;
-	private String name, houseName;//, userName
+	private String name, houseName;
+	private User currentUser;
+	//private UserRegistryUtil registerUser = UserRegistryUtil.instance;
 	public WizardStudent() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -25,6 +29,7 @@ public class WizardStudent {
 		this.wizardYear = year;
 		this.housePoints = housePoints2;
 		this.houseName = house;
+		this.currentUser = currentUser;
 	}
 	public int getId() {
 		return id;
@@ -56,17 +61,17 @@ public class WizardStudent {
 	public void setHouseName(String houseName) {
 		this.houseName = houseName;
 	}
-	/*public String getUserName() {
-		return userName;
+	public User getUser() {
+		return currentUser;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}*/
+	public void setUserName(User currentUser) {
+		this.currentUser = currentUser;
+	}
 	@Override
 	//, userName =" + "userName
 	public String toString() {
 		return "WizardStudent [id=" + id + ", wizardYear=" + wizardYear + ", housePoints=" + housePoints + ", name="
-				+ name + ", houseName=" + houseName + "]";
+				+ name + ", houseName=" + houseName + ", currentUser =" + currentUser + "]";
 	}
 	
 	

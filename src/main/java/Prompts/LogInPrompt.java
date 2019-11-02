@@ -40,9 +40,10 @@ public class LogInPrompt implements Prompt{
 				String firstTimePassword = input.nextLine();
 				
 				//log.debug("attempting to store username and password");
-				User newUser = new User(1, firstTimeUsername, firstTimePassword, "student");
+				User newUser = new User(1, firstTimeUsername, firstTimePassword, "user");
 				userDao.save(newUser);
 				registerUser.login(firstTimeUsername, firstTimePassword);
+				return new MainMenuPrompt();
 			}
 		case "2":
 				System.out.println("Please enter your username");

@@ -11,6 +11,7 @@ public interface WizardDao {
 	int remove(WizardStudent removeWizard);
 	List<WizardStudent> findAll();
 	boolean doSave(WizardStudent createdCharacter);
-	int disableCharacter(WizardStudent wizard);
+	List<WizardStudent> findAllDisabledCharacters();
+	void disableCharacter(WizardStudent wizard);
 	
 }

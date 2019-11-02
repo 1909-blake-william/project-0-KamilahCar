@@ -30,8 +30,8 @@ public class UserDaoDatabase implements UserDao {
 			//log.debug("attempting to find user by credentials from DB");
 			try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
 
-				String saveStatement = "INSERT INTO hogwarts_users (user_id, user_name, user_password) "
-						+ " VALUES (hogwarts_users_id_seq.nextval,?,?)";
+				String saveStatement = "INSERT INTO HOGWARTS_USERS (USER_ID, USER_NAME, USER_PASSWORD) "
+						+ "VALUES(HOGWARTS_USERS_ID_SEQ.nextval,?,?)";
 
 				PreparedStatement ps = hogwartsDatabase.prepareStatement(saveStatement);
 				ps.setString(1, u.getName());
@@ -48,7 +48,7 @@ public class UserDaoDatabase implements UserDao {
 		}
 		public int remove (User thisUser) {
 			try(Connection hogwartsDatabase = ConnectionUtil.getConnection()){
-				String deleteStatement = "DELETE FROM hogwarts_users WHERE user_name = ?";
+				String deleteStatement = "DELETE FROM HOGWARTS_USERS " + "WHERE USER_NAME = ?";
 				PreparedStatement ps = hogwartsDatabase.prepareStatement(deleteStatement);
 				ps.setString(1, thisUser.getName());	
 				
@@ -63,8 +63,8 @@ public class UserDaoDatabase implements UserDao {
 		public int disableLogin(User deleteLogin) {
 			try(Connection hogwartsDatabase = ConnectionUtil.getConnection()){
 				String addStatement = "INSERT INTO HOGWARTS_DISABLEDUSERS(?,?,?) " + 
-						"VALUES(hogwarts_user_id_seq,?,?)";
-				String deleteStatement = "DELETE FROM hogwarts_users WHERE user_name = ?";
+						"VALUES(HOGWARTS_USER_ID_SEQ.nextval,?,?)";
+				String deleteStatement = "DELETE FROM HOGWARTS_USERS " + "WHERE USER_NAME = ?";
 				PreparedStatement psAdd = hogwartsDatabase.prepareStatement(addStatement);
 				psAdd.setString(1, deleteLogin.getName());	
 				psAdd.setString(2, deleteLogin.getPassword());
@@ -90,7 +90,7 @@ public class UserDaoDatabase implements UserDao {
 			//log.debug("attempting to find all users from DB");
 			try (Connection c = ConnectionUtil.getConnection()) {
 
-				String selection = "SELECT * FROM hogwarts_users";
+				String selection = "SELECT * FROM HOGWARTS_USERS";
 
 				PreparedStatement ps = c.prepareStatement(selection);
 
@@ -117,7 +117,7 @@ public class UserDaoDatabase implements UserDao {
 			log.debug("attempting to find user by credentials from DB");
 			try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
 
-				String sql = "SELECT * FROM hogwarts_users " + "WHERE user_id = id";
+				String sql = "SELECT * FROM HOGWARTS_USERS " + "WHERE USER_ID = id";
 
 				PreparedStatement ps = hogwartsDatabase.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery();
@@ -141,7 +141,8 @@ public class UserDaoDatabase implements UserDao {
 			log.debug("attempting to find user by credentials from DB");
 			try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
 
-				String sql = "SELECT * FROM hogwarts_users " + "WHERE user_name = ? AND user_password = ?";
+				String sql = "SELECT * FROM HOGWARTS_USERS " + 
+				"WHERE USER_NAME = ? AND USER_PASSWORD = ?";
 
 				PreparedStatement ps = hogwartsDatabase.prepareStatement(sql);
 				ps.setString(1, username);
@@ -166,7 +167,7 @@ public class UserDaoDatabase implements UserDao {
 			// TODO Auto-generated method stub
 			
 			try (Connection hogwartsDatabase = ConnectionUtil.getConnection()){
-				String selection = "SELECT * FROM hogwarts_users " + "WHERE user_name = ?";
+				String selection = "SELECT * FROM HOGWARTS_USERS " + "WHERE USER_NAME = ?";
 				PreparedStatement ps = hogwartsDatabase.prepareStatement(selection);
 				ps.setString(1, username);
 				

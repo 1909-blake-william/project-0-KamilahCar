@@ -17,7 +17,7 @@ public class MainMenuPrompt implements Prompt {
 		System.out.println("2. Use House points?");
 		System.out.println("3. Add a character?");
 		System.out.println("4. Remove a character?");
-		System.out.println("5. Shutdown your account?");
+		System.out.println("5. Log out?");
 		System.out.println("6. View your transaction history");
 
 		String actionEntered = action.nextLine();
@@ -31,7 +31,7 @@ public class MainMenuPrompt implements Prompt {
 		case "4":
 			return new RemoveAccountPrompt();
 		case "5":
-			return new RemoveLoginPrompt();
+			return new LogInPrompt();
 		case "6":
 			return new ViewTransactionHistoryPrompt();
 		default:

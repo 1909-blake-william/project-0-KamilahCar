@@ -25,9 +25,13 @@ public class WithdrawPointsPrompt implements Prompt{
 			int pointsSubtracted = input.nextInt();
 			int currentPoints = currentWizard.getHousePoints();
 			int newHousePoints = currentPoints - pointsSubtracted;
+			if (newHousePoints < 0) {
+				newHousePoints = 0;
+			}
+			
 			
 			try (Connection hogwartsDatabase = ConnectionUtil.getConnection()){
-				String changePoints = "UPDATE hogwarts_characters SET house_points = ? WHERE wizard_name = ?";
+				String changePoints = "UPDATE HOGWARTS_CHARACTERS SET HOUSE_POINTS = ? WHERE WIZARD_NAME = ?";
 				PreparedStatement ps = hogwartsDatabase.prepareStatement(changePoints);
 				ps.setInt(1, newHousePoints);
 				ps.setString(2, name);

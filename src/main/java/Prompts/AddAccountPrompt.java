@@ -1,5 +1,6 @@
 package Prompts;
 
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -8,12 +9,12 @@ import java.util.Scanner;
 import Daos.WizardDao;
 //import Models.User;
 import Models.WizardStudent;
-import Util.UserRegistryUtil;
+//import Util.UserRegistryUtil;
 
 public class AddAccountPrompt implements Prompt{
 private Scanner characterInput = new Scanner(System.in);
 public static List <String>addTransaction = new ArrayList<String>();
-private UserRegistryUtil registerUser = UserRegistryUtil.instance;
+//private UserRegistryUtil registerUser = UserRegistryUtil.instance;
 private WizardDao wizardDao = WizardDao.currentAccountImplementation;
 	@Override
 	public Prompt run() {
@@ -30,11 +31,11 @@ private WizardDao wizardDao = WizardDao.currentAccountImplementation;
 			
 			System.out.println("What year are they in (1-4)?");
 			int year = characterInput.nextInt();
+			characterInput.nextLine();
 			
 			//Create a new Wizard with data entered for name, year, and house name
 			//the rest is dummy data
-			WizardStudent createdCharacter = new WizardStudent(1, wizardName, year, 10, 
-					houseName, registerUser.getCurrentUser());
+			WizardStudent createdCharacter = new WizardStudent(1, wizardName, year, 10, houseName);
 			//Saving wizard if there are no problems with the input
 			if (wizardDao.doSave(createdCharacter) == true) {
 				wizardDao.save(createdCharacter);
@@ -48,7 +49,7 @@ private WizardDao wizardDao = WizardDao.currentAccountImplementation;
 						+ "makes sure you enter a year between 1 and 4, and"
 						+ "make sure your house is a valid house.");
 				//Start this prompt over if character save is unsuccessful
-				return this;
+				//return this;
 			}
 				//Go to main menu if a character is successfully created
 			return new MainMenuPrompt();

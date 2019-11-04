@@ -41,7 +41,8 @@ private WizardDao wizardDao = WizardDao.currentAccountImplementation;
 				wizardDao.save(createdCharacter);
 				//Accessing list created in AddAccountPrompt class and adding
 				//this transaction to that list
-				addTransaction.add("Wizard added " + wizardName);
+				//addTransaction.add("Wizard added " + wizardName);
+				wizardDao.addTransaction("added", wizardName);
 			//User didn't enter a valid year (1-4) for character or
 			//User didn't enter valid house for character 
 			} else {

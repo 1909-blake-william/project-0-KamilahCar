@@ -1,3 +1,4 @@
+package Driver;
 
 /*import Daos.WizardDao;
 import Models.WizardStudent;
@@ -5,14 +6,15 @@ import Prompts.MainMenuPrompt;*/
 
 import Prompts.Prompt;
 import Prompts.LogInPrompt;
+/*import Daos.WizardDao;
+import Models.WizardStudent;*/
 //import Daos.UserDao;
 /*import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import Daos.WizardDao;
-import Models.WizardStudent;
+
 import Util.ConnectionUtil;*/
 
 //console line application
@@ -25,8 +27,8 @@ import Util.ConnectionUtil;*/
 //admin can view all accounts
 public class HogwartsApp {
 	//private static UserDao userDao = UserDao.currentUserImplementation;
-	/*private static WizardDao wizardDao = WizardDao.currentAccountImplementation;
-	WizardStudent extractWizard(ResultSet rs) throws SQLException {
+	//private static WizardDao wizardDao = WizardDao.currentAccountImplementation;
+	/*WizardStudent extractWizard(ResultSet rs) throws SQLException {
 		int id = rs.getInt("wizard_id");
 		String name = rs.getString("wizard_name");
 		int year = rs.getInt("wizard_year");
@@ -72,6 +74,7 @@ public class HogwartsApp {
 	}*/
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
 		Prompt p = new LogInPrompt();
 		while(true) {
 			p = p.run();
@@ -98,12 +101,13 @@ public class HogwartsApp {
 		/*WizardStudent sample = new WizardStudent(1, "Neville", 2, 10, "Slytherin");
 		if (wizardDao.doSave(sample) == true) {
 			wizardDao.save(sample);
-		}*/
-		//System.out.println(wizardDao.findAll());
+		}
+		
+		System.out.println(wizardDao.findAll());
 		//wizardDao.disableCharacter(sample);
 		//WizardStudent sample = wizardDao.findByName("Neville");
-		//wizardDao.remove(sample);
-		//System.out.println(wizardDao.findAll());
+		wizardDao.remove(sample);
+		System.out.println(wizardDao.findAll());*/
 		//System.out.println(wizardDao.findAllDisabledCharacters());
 		
 

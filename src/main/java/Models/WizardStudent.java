@@ -1,6 +1,6 @@
 package Models;
 
-import Util.UserRegistryUtil;
+//import Util.UserRegistryUtil;
 
 public class WizardStudent {
 	//instance variables

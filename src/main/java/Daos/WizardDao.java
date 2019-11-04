@@ -1,7 +1,6 @@
 package Daos;
 
 import java.util.List;
-
 import Models.WizardStudent;
 
 public interface WizardDao {
@@ -13,5 +12,6 @@ public interface WizardDao {
 	boolean doSave(WizardStudent createdCharacter);
 	List<WizardStudent> findAllDisabledCharacters();
 	void disableCharacter(WizardStudent wizard);
+	int addTransaction(String actionName, String transactionName);
 	
 }

@@ -31,18 +31,18 @@ public class RemoveAccountPrompt implements Prompt{
 		//Checking if account exists in database
 		if (wizardToBeRemoved != null && userRole.equalsIgnoreCase("admin")) {
 				wizardDao.remove(wizardToBeRemoved);
-			//Accessing list of transactions created in AddAccountPrompt class
-				//Adding this transaction to that list
-				AddAccountPrompt.addTransaction.add("Wizard removed " + accountName);
+				//Adding this transaction to transaction table
+				wizardDao.addTransaction("Removed", accountName);
 				//Return to Admin Main Menu
 				return new AdminMainPrompt();
 		} else if (wizardToBeRemoved != null && !userRole.equalsIgnoreCase("admin")){
 				wizardDao.disableCharacter(wizardToBeRemoved);
-				AddAccountPrompt.addTransaction.add("Wizard removed " + accountName);
+				//Adding this transaction to transaction table
+				wizardDao.addTransaction("Removed", accountName);
 				//Return to main menu
 				return new MainMenuPrompt();
 				//accountNameInput.close();
-		//Username already exists in database and cannot be duplicated
+		//Wizard isn't in database
 		} else {
 			System.out.println("Sorry, that Wizard doesn't exist.");
 			return new MainMenuPrompt();

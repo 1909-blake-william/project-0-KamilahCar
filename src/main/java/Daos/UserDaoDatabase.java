@@ -3,18 +3,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-//import java.sql.Statement;
+//import Util.UserRegistryUtil;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import Models.Transaction;
 //import org.apache.log4j.Logger;
 import Models.User;
 import Util.ConnectionUtil;
 public class UserDaoDatabase implements UserDao {
 
 		private Logger log = Logger.getRootLogger();
+		//private UserRegistryUtil registerUser = UserRegistryUtil.instance;
 
 		User extractUser(ResultSet rs) throws SQLException {
 			int id = rs.getInt("user_id");
@@ -23,7 +25,13 @@ public class UserDaoDatabase implements UserDao {
 			String role = rs.getString("systemrole");
 			return new User(id, rsUsername, rsPassword, role);
 		}
-
+		Transaction extractTransaction(ResultSet rs) throws SQLException{
+			int id = rs.getInt("transaction_id");
+			String rsAccountName = rs.getString("transaction_name");
+			String rsActionPerformed = rs.getString("transaction_action");
+			return new Transaction(id, rsActionPerformed, rsAccountName);
+			
+		}
 		@Override
 		//Order by later
 		public int save(User u) {
@@ -88,11 +96,11 @@ public class UserDaoDatabase implements UserDao {
 		@Override
 		public List<User> findAll() {
 			//log.debug("attempting to find all users from DB");
-			try (Connection c = ConnectionUtil.getConnection()) {
+			try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
 
 				String selection = "SELECT * FROM HOGWARTS_USERS";
 
-				PreparedStatement ps = c.prepareStatement(selection);
+				PreparedStatement ps = hogwartsDatabase.prepareStatement(selection);
 
 				ResultSet rs = ps.executeQuery();
 				List<User> users = new ArrayList<User>();
@@ -111,7 +119,47 @@ public class UserDaoDatabase implements UserDao {
 				return null;
 			}
 		}
-
+		public List<Transaction> findTransactionByUserId(int id){
+			List<Transaction> transactions = new ArrayList<Transaction>();
+			try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
+				// Adding values
+				String addTransaction = "SELECT * FROM HOGWARTS_USERTRANSACTIONS WHERE USER_ID = ?";
+				PreparedStatement ps = hogwartsDatabase.prepareStatement(addTransaction);
+				ps.setInt(1, id);
+				
+				ResultSet rs = ps.executeQuery();
+				while (rs.next()) {
+					transactions.add(extractTransaction(rs));
+				}
+				return transactions;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.getCause();
+				e.getSQLState();
+				e.printStackTrace();
+				return null;
+			}
+		}
+		public List<Transaction> findAllTransactions(){
+			
+			List<Transaction> transactions = new ArrayList<Transaction>();
+			try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
+				String selection = "SELECT * FROM HOGWARTS_USERTRANSACTIONS";
+				PreparedStatement ps = hogwartsDatabase.prepareStatement(selection);
+				ResultSet rs = ps.executeQuery();
+				while (rs.next()) {
+					Transaction currentTransaction = extractTransaction(rs);
+					transactions.add(currentTransaction);
+				}
+				return transactions;
+			} catch (SQLException anyException) {
+				anyException.getCause();
+				anyException.getSQLState();
+				anyException.printStackTrace();
+				return null;
+			}
+			
+		}
 		@Override
 		public User findById(int id) {
 			log.debug("attempting to find user by credentials from DB");

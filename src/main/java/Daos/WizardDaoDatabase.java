@@ -10,15 +10,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 //import org.apache.log4j.Logger;
-
 //import Models.User;
 import Models.WizardStudent;
 import Util.ConnectionUtil;
-//import Util.UserRegistryUtil;
+import Util.UserRegistryUtil;
 
 public class WizardDaoDatabase implements WizardDao {
 	// private Logger log = Logger.getRootLogger();
-	// private UserRegistryUtil registerUser = UserRegistryUtil.instance;
+	private UserRegistryUtil registerUser = UserRegistryUtil.instance;
+
 	WizardStudent extractWizard(ResultSet rs) throws SQLException {
 		int id = rs.getInt("wizard_id");
 		String name = rs.getString("wizard_name");
@@ -26,18 +26,17 @@ public class WizardDaoDatabase implements WizardDao {
 		int housePoints = rs.getInt("house_points");
 		String house = rs.getString("house_name");
 
-		return new WizardStudent(id, name, year, housePoints, house);
+		return new WizardStudent(id, name, year, housePoints, house, registerUser.getCurrentUser());
 	}
 
 	public List<WizardStudent> findAllDisabledCharacters() {
-		WizardStudent wizardFindAll = null;
 		List<WizardStudent> wizards = new ArrayList<WizardStudent>();
-		try (Connection c = ConnectionUtil.getConnection()) {
+		try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
 			String selection = "SELECT * FROM DISABLED_CHARACTERS";
-			PreparedStatement ps = c.prepareStatement(selection);
+			PreparedStatement ps = hogwartsDatabase.prepareStatement(selection);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				wizardFindAll = extractWizard(rs);
+				WizardStudent wizardFindAll = extractWizard(rs);
 				wizards.add(wizardFindAll);
 			}
 			return wizards;
@@ -174,6 +173,34 @@ public class WizardDaoDatabase implements WizardDao {
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public int addTransaction(String actionName, String accountName) {
+		// Getting WizardStudent
+		// SQL Statement
+		// Adding transaction to transaction table in Database
+		String addTransaction = "INSERT INTO HOGWARTS_USERTRANSACTIONS"
+				+ "(transaction_id, transaction_action, transaction_name, user_id) "
+				+ "VALUES(transaction_id_seq.nextval,?,?,?)";
+		// Connecting to database
+		try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
+			// Performing SQL Statement, Adding values
+			PreparedStatement ps = hogwartsDatabase.prepareStatement(addTransaction);
+			ps.setString(1, actionName);
+			ps.setString(2, accountName);
+			ps.setInt(3, registerUser.getCurrentUser().getId());
+			// Performing the SQL Statement on the specified row
+			return ps.executeUpdate();
+			// If there is an SQL exception, no updates will occur
+			// within the database
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.getCause();
+			e.getSQLState();
+			e.printStackTrace();
+			return 0;
 		}
 	}
 }

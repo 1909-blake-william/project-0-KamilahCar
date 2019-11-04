@@ -17,7 +17,7 @@ public class DepositPointsPrompt implements Prompt{
 	@Override
 	public Prompt run() {
 		// TODO Auto-generated method stub
-		System.out.println("Which character would you like to upgrade?");
+		System.out.println("Which character would you like to deposit to?");
 		String name = input.nextLine();
 		WizardStudent currentWizard = wizardDao.findByName(name);
 		if(currentWizard != null) {
@@ -26,11 +26,15 @@ public class DepositPointsPrompt implements Prompt{
 			int currentPoints = currentWizard.getHousePoints();
 			int newHousePoints = currentPoints + pointsAdded;
 			
+			//adding points to transaction
+			wizardDao.addTransaction("added points: " + pointsAdded, currentWizard.getName());
+			
 			try (Connection hogwartsDatabase = ConnectionUtil.getConnection()){
 				String changePoints = "UPDATE hogwarts_characters SET house_points = ? WHERE wizard_name = ?";
 				PreparedStatement ps = hogwartsDatabase.prepareStatement(changePoints);
 				ps.setInt(1, newHousePoints);
 				ps.setString(2, name);
+				
 				ps.executeUpdate();
 				
 			} catch(SQLException e) {
@@ -38,14 +42,14 @@ public class DepositPointsPrompt implements Prompt{
 				e.getCause();
 				e.printStackTrace();
 			}
-			System.out.println("Points added: " + pointsAdded);
-			AddAccountPrompt.addTransaction.add("Points added: " + pointsAdded);
+			//String pointsTransaction = Integer.toString(newHousePoints);
+			
 		} else {
 			System.out.println("Invalid character, please enter a valid character.");
 			return this;
 		}
 		
-
+		
 		return new MainMenuPrompt();
 	}
 	

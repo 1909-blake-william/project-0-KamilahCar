@@ -14,20 +14,24 @@ public class ViewTransactionHistoryPrompt implements Prompt {
 	@Override
 	public Prompt run() {
 		// TODO Auto-generated method stub
-		// Printing out list of transactions shared among all main menu prompt options
-
+		
+		//Getting all transactions made by user who is logged in
 		List<Transaction> userTransactions = userDao.
 				findTransactionByUserId(registerUser.
 				getCurrentUser().getId());
+		
 		if (userTransactions.size() > 0) {
 			System.out.println("Recent transactions for " 
 					+ registerUser.getCurrentUser().getName());
 			System.out.println(userTransactions);
+		//If there are no transactions to report this print statement
+		//is issued
 		} else {
 			System.out.println("Sorry You have no recent "
 					+ "transactions to report.");
 		}
-
+		
+		//always return to main menu
 		return new MainMenuPrompt();
 	}
 

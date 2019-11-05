@@ -12,11 +12,11 @@ public class Test {
 		String houseName = wizard.getHouseName();
 		if (wizardDao.findByName(name) == null) {
 			return false;
-		} else if (!houseName.equals("Gryffindor")|| !houseName.equals("Slytherin")||
-					!houseName.equals("Hufflepuff")|| !houseName.equals("Ravenclaw")) {
+		} else if (!houseName.equals("Gryffindor")&& !houseName.equals("Slytherin")&&
+					!houseName.equals("Hufflepuff")&& !houseName.equals("Ravenclaw")) {
 			return false;
 			
-		} else if (year == 1 || year == 2 || year == 3 || year == 4) {
+		} else if (year == 1 && year == 2 && year == 3 && year == 4) {
 					return false;
 		} else {
 			return true;

@@ -40,7 +40,7 @@ public class AdminMainPrompt implements Prompt {
 			default:
 				break;
 			}
-			action.close();
+	
 			return this;
 		}
 	}

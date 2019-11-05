@@ -39,9 +39,7 @@ private WizardDao wizardDao = WizardDao.currentAccountImplementation;
 			//Saving wizard if there are no problems with the input
 			if (wizardDao.doSave(createdCharacter) == true) {
 				wizardDao.save(createdCharacter);
-				//Accessing list created in AddAccountPrompt class and adding
-				//this transaction to that list
-				//addTransaction.add("Wizard added " + wizardName);
+				//adding this transaction to transaction table
 				wizardDao.addTransaction("added", wizardName);
 			//User didn't enter a valid year (1-4) for character or
 			//User didn't enter valid house for character 
@@ -50,7 +48,7 @@ private WizardDao wizardDao = WizardDao.currentAccountImplementation;
 						+ "makes sure you enter a year between 1 and 4, and"
 						+ "make sure your house is a valid house.");
 				//Start this prompt over if character save is unsuccessful
-				//return this;
+				return this;
 			}
 				//Go to main menu if a character is successfully created
 			return new MainMenuPrompt();

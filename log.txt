@@ -54,3 +54,12 @@
 2019-11-04 00:36:51 DEBUG UserDaoDatabase:189 - attempting to find user by credentials from DB
 2019-11-04 00:48:05 DEBUG UserDaoDatabase:189 - attempting to find user by credentials from DB
 2019-11-04 00:50:06 DEBUG UserDaoDatabase:189 - attempting to find user by credentials from DB
+2019-11-05 09:00:37 DEBUG UserDaoDatabase:189 - attempting to find user by credentials from DB
+2019-11-05 09:01:07 DEBUG UserDaoDatabase:189 - attempting to find user by credentials from DB
+2019-11-05 14:58:36 DEBUG UserDaoDatabase:189 - attempting to find user by credentials from DB
+2019-11-05 15:01:59 DEBUG UserDaoDatabase:189 - attempting to find user by credentials from DB
+2019-11-05 15:02:47 DEBUG UserDaoDatabase:189 - attempting to find user by credentials from DB
+2019-11-05 15:25:01 DEBUG UserDaoDatabase:189 - attempting to find user by credentials from DB
+2019-11-05 15:25:14 DEBUG UserDaoDatabase:189 - attempting to find user by credentials from DB
+2019-11-05 15:26:08 DEBUG UserDaoDatabase:189 - attempting to find user by credentials from DB
+2019-11-05 15:26:19 DEBUG UserDaoDatabase:189 - attempting to find user by credentials from DB

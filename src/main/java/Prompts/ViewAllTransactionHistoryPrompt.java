@@ -12,6 +12,7 @@ public class ViewAllTransactionHistoryPrompt implements Prompt{
 		// TODO Auto-generated method stub
 		System.out.println("User transactions: ");
 		System.out.println(userDao.findAllTransactions());
+		//always return to main menu
 		return new AdminMainPrompt();
 	}
 

@@ -18,25 +18,35 @@ import Util.UserRegistryUtil;
 public class WizardDaoDatabase implements WizardDao {
 	// private Logger log = Logger.getRootLogger();
 	private UserRegistryUtil registerUser = UserRegistryUtil.instance;
-
+	
+	//Get a single Wizard object from one row in database
 	WizardStudent extractWizard(ResultSet rs) throws SQLException {
+		//Setting all arguments for new WizardStudent object
 		int id = rs.getInt("wizard_id");
 		String name = rs.getString("wizard_name");
 		int year = rs.getInt("wizard_year");
 		int housePoints = rs.getInt("house_points");
 		String house = rs.getString("house_name");
-
+		//Creating new wizardstudent based on these arguments
+		//and returning
 		return new WizardStudent(id, name, year, housePoints, house, registerUser.getCurrentUser());
 	}
-
+	//Extract all disabled characters (wizards students) from disabled characters table in database
 	public List<WizardStudent> findAllDisabledCharacters() {
+		//Variables
 		List<WizardStudent> wizards = new ArrayList<WizardStudent>();
+		//establishing connection to database
 		try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
+			//SQL Query
+			//Selecting all columns from disabled characters
 			String selection = "SELECT * FROM DISABLED_CHARACTERS";
 			PreparedStatement ps = hogwartsDatabase.prepareStatement(selection);
+			//Executing SQL Query on all rows in table
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
+				//Getting wizard from row
 				WizardStudent wizardFindAll = extractWizard(rs);
+				//adding row to list of wizards
 				wizards.add(wizardFindAll);
 			}
 			return wizards;
@@ -47,16 +57,22 @@ public class WizardDaoDatabase implements WizardDao {
 			return null;
 		}
 	}
-
+	//Extract all characters (wizards students) from characters table in database
 	public List<WizardStudent> findAll() {
-		WizardStudent wizardFindAll = null;
+		//Variables
 		List<WizardStudent> wizards = new ArrayList<WizardStudent>();
-		try (Connection c = ConnectionUtil.getConnection()) {
+		//establishing connection to database
+		try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
+			//SQL Query
+			//Selecting all columns from hogwarts characters
 			String selection = "SELECT * FROM HOGWARTS_CHARACTERS";
-			PreparedStatement ps = c.prepareStatement(selection);
+			PreparedStatement ps = hogwartsDatabase.prepareStatement(selection);
+			//Executing SQL Query on all rows in table
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				wizardFindAll = extractWizard(rs);
+				//Getting wizard from row
+				WizardStudent wizardFindAll = extractWizard(rs);
+				//adding row to list of wizards
 				wizards.add(wizardFindAll);
 			}
 			return wizards;
@@ -71,13 +87,19 @@ public class WizardDaoDatabase implements WizardDao {
 	@Override
 	public WizardStudent findByName(String name) {
 		// TODO Auto-generated method stub
-
+		//establishing connection to database
 		try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
+			//SQL Query
+			//Selecting all columns from hogwarts characters that match the name input
 			String selection = "SELECT * FROM HOGWARTS_CHARACTERS " + "WHERE WIZARD_NAME = ?";
 			PreparedStatement ps = hogwartsDatabase.prepareStatement(selection);
+			//Setting name input parameter
 			ps.setString(1, name);
+			//Executing query on row where input name matches character name in database
 			ResultSet rs = ps.executeQuery();
+			//Searching rows
 			if (rs.next()) {
+				//return the wizard that matches the criteria
 				return extractWizard(rs);
 			} else {
 				return null;
@@ -89,18 +111,23 @@ public class WizardDaoDatabase implements WizardDao {
 			return null;
 		}
 	}
-
+	//Checks if a newly created character (Wizard student) should
+	//be saved
 	public boolean doSave(WizardStudent wizard) {
+		//Variables
 		int year = wizard.getWizardYear();
 		String name = wizard.getName();
 		WizardStudent wiz = findByName(name);
 		String houseName = wizard.getHouseName();
+		//Wizard must not already exist in database
 		if (wiz != null) {
 			return false;
+		//house name must equal Gryffindor, Slytherin, Hufflepuff,
+		//or Ravenclaw
 		} else if (!houseName.equalsIgnoreCase("Gryffindor") && !houseName.equalsIgnoreCase("Slytherin")
 				&& !houseName.equalsIgnoreCase("Hufflepuff") && !houseName.equalsIgnoreCase("Ravenclaw")) {
 			return false;
-
+		//year must be within range 1-4
 		} else if (year != 1 && year != 2 && year != 3 && year != 4) {
 			return false;
 		} else {
@@ -108,7 +135,7 @@ public class WizardDaoDatabase implements WizardDao {
 		}
 
 	}
-
+	//
 	@Override
 	public int save(WizardStudent wizard) {
 		try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
@@ -134,11 +161,11 @@ public class WizardDaoDatabase implements WizardDao {
 		}
 	}
 
-//Cascading delete based on foreign key
+
 //Move character over to a new table (inactive table) based on booleans
 	public int remove(WizardStudent removeWizard) {
 		try (Connection hogwartsDatabase = ConnectionUtil.getConnection()) {
-			// "DELETE FROM hogwarts_users WHERE user_name = ?" +
+			
 			String deleteStatement = "DELETE FROM HOGWARTS_CHARACTERS WHERE WIZARD_NAME = ?";
 			PreparedStatement ps = hogwartsDatabase.prepareStatement(deleteStatement);
 			ps.setString(1, removeWizard.getName());

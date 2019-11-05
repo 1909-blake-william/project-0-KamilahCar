@@ -28,6 +28,7 @@ public class RemoveAccountPrompt implements Prompt{
 		WizardStudent wizardToBeRemoved = wizardDao.findByName(accountName);
 		String userRole = registerUser.getCurrentUser().getRole();
 		//log.debug("User should be removed if the user is an admin.");
+		
 		//Checking if account exists in database
 		if (wizardToBeRemoved != null && userRole.equalsIgnoreCase("admin")) {
 				wizardDao.remove(wizardToBeRemoved);
